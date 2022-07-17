@@ -32,22 +32,10 @@ describe("Setting up", () => {
     })
 
     it("Should allow you to take all 100 eth from the staking contract", async() => {
-        //Execute your exploit here
-
-        //Build Factory with the attacker signer
-        let factory = await ethers.getContractFactory("Attack1", attacker)
-
-        //deploye the attack contract with the staking contract address being passed in
-        let contract = await factory.deploy(
-            Stake.address
-        )
-
-        //Wait until the attack contract is deployed
-        await contract.deployed()
-
-        //Call the attack function on the attack contract with a value of 1 ETH
-        await contract.attack({ value: ethers.utils.parseEther("1") })
-
+        const attack = await ethers.getContractFactory("Attack", attacker);
+        Attack = await attack.deploy(Stake.address);
+        await Attack.deployed();
+        await Attack.connect(attacker).initialStaking({ value: ethers.utils.parseEther("1") });
     })
 
     //Once our explout has been ran
